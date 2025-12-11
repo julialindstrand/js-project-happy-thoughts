@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react"
 import styled from "styled-components"
+import { useState, useEffect } from "react"
 import { ThoughtsForm } from "./components/ThoughtsForm"
 import { CardList } from "./components/CardList"
 import { GlobalStyle } from "./components/GlobalStyles"
@@ -41,7 +41,7 @@ export const App = () => {
       {
         method: "POST",
         body: JSON.stringify({ message: newText }),
-        headers: { "Content-Type": 'application/json' }
+        headers: { "Content-Type": "application/json" }
       })
 
     const item = await response.json()
@@ -56,12 +56,32 @@ export const App = () => {
     setThoughts((prev) => [newThought, ...prev])
   }
 
-  const incrementLike = (id) => {
-    setThoughts((prev) =>
-      prev.map((t) =>
-        t.id === id ? { ...t, likes: t.likes + 1 } : t
+  // Likes
+  const addLike = async (id) => {
+
+    const response = await fetch(`https://happy-thoughts-api-4ful.onrender.com/thoughts/${id}/like`,
+      {
+        method: "POST",
+        body: JSON.stringify({ hearts: + 1 }),
+        headers: { "Content-Type": "application/json" },
+      })
+
+    const item = await response.json()
+
+    // const newLike = {
+    //   id: item._id,
+    //   likes: item.hearts,
+    //   text: item.message,
+    //   createdAt: item.createdAt
+    // }
+
+    setThoughts(prev => {
+      return prev.map(thought =>
+        thought.id === id
+          ? { ...thought, likes: item.hearts }
+          : thought
       )
-    )
+    })
   }
 
   return (
@@ -70,7 +90,7 @@ export const App = () => {
       <AppWrapper className="AppWrapper">
         <h1>HAPPY THOUGHTS</h1>
         <ThoughtsForm onSubmit={addThought} />
-        <CardList thoughts={thoughts} onLike={incrementLike} />
+        <CardList thoughts={thoughts} onLike={addLike} />
       </AppWrapper >
     </>)
 }
@@ -78,4 +98,4 @@ export const App = () => {
 // Styling
 const AppWrapper = styled.div`
   width: 100%;
-`
+  `
