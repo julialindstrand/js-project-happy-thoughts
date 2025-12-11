@@ -6,12 +6,6 @@ import { GlobalStyle } from "./components/GlobalStyles"
 
 export const App = () => {
   const [thoughts, setThoughts] = useState([])
-  // thought = {
-  //   id: '',
-  //   text: '',
-  //   likes: '',
-  //   createdAt: ''
-  // }
 
   useEffect(() => {
     const init = async () => {
@@ -36,7 +30,7 @@ export const App = () => {
   }, [])
 
   const addThought = async (newText) => {
-    // SENDING or also called POSTing
+    // SENDING also called POSTing
     const response = await fetch("https://happy-thoughts-api-4ful.onrender.com/thoughts",
       {
         method: "POST",
@@ -67,13 +61,6 @@ export const App = () => {
       })
 
     const item = await response.json()
-
-    // const newLike = {
-    //   id: item._id,
-    //   likes: item.hearts,
-    //   text: item.message,
-    //   createdAt: item.createdAt
-    // }
 
     setThoughts(prev => {
       return prev.map(thought =>
