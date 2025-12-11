@@ -1,30 +1,30 @@
 import styled from "styled-components"
+import { Time } from "./Time"
 
-export const ThoughtsCard = ({ thought, onLike }) => {
+export const ThoughtsCard = ({ thought, onLike, createdAt }) => {
 
   return (
-    <div>
-      <Text>{thought.text}</Text>
-      <LikeBar>
-        <LikeBtn onClick={() => onLike(thought.id)} aria-label="like this thought">
-          ❤️
-        </LikeBtn>
-        <LikeCount>{thought.likes}</LikeCount>
-      </LikeBar>
-    </div>
+    <Card>
+      <StyledText> {thought.text} </StyledText>
+      <LikeBtn onClick={() => onLike(thought.id)} aria-label="like this thought">
+        ❤️
+      </LikeBtn>
+      <LikeCount>{thought.likes}</LikeCount>
+      <Time createdAt={createdAt} />
+    </Card>
   )
 }
 
 // Styling
-const LikeBar = styled.div`
-  display: flex;
-  align-items: center;
-  `
+const Card = styled.div`
+  width: 100%;
+`
 
-const Text = styled.p`
-  margin: 0 0 8px 0;
+const StyledText = styled.p`
+  margin-bottom: 8px;
   font-size: 15px;
   color: #333;
+  overflow-wrap: break-word;
 `
 
 const LikeBtn = styled.button`

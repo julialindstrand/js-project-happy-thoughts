@@ -32,21 +32,17 @@ export const ThoughtsForm = ({ onSubmit }) => {
   return (
     <FormWrapper>
       <FormSection onSubmit={handleSubmit}>
-        <H1>What is making you happy right now?</H1>
-
+        <H2>What is making you happy right now?</H2>
         <Input
           rows={3}
           value={text}
           onChange={handleChange}
           maxLength={MAX_LEN}
           name="text"
-          placeholder="Write your thought here"
         />
         {error && <ErrorMsg>{error}</ErrorMsg>}
-        <Bottom>
-          <Button type="submit">❤️ Send Happy Thought ❤️</Button>
-          <Counter>{text.length} / {MAX_LEN}</Counter>
-        </Bottom>
+        <Counter>{text.length} / {MAX_LEN}</Counter><br></br>
+        <Button type="submit">❤️ Send Happy Thought ❤️</Button>
       </FormSection>
     </FormWrapper>
   )
@@ -54,34 +50,23 @@ export const ThoughtsForm = ({ onSubmit }) => {
 
 // Styling
 const FormWrapper = styled.div`
-  margin: 20px;`
+background: #f2f0f0;
+border: 1px solid black;
+box-shadow: 10px 10px 0 black;
+padding: 20px;
+`
 
 const FormSection = styled.form`
-  background: #f2f0f0;
-  border: 1px solid black;
-  box-shadow: 10px 10px 0 black;
-  width: 100%;
-  padding: 20px;
-  font-size: 10px;
 `
 
 const Input = styled.textarea`
   border: 2px solid #c9c8c8;
-  width: 95%;
+  width: 100%;
   font-size: 15px;
   color: black;
-  margin-top: 10px;
-  padding: 10px;
 `
 
-const Bottom = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  margin-right: 10px;
-  `
-
-const Counter = styled.text`
+const Counter = styled.p`
   font-size: 15px;
   color: #c9c8c8;
 `
@@ -90,7 +75,7 @@ const Button = styled.button`
   background-color: #ffadad;
   border: 2px solid #ffadad;
   border-radius: 25px;
-  padding: 15px;
+  padding: 10px;
   margin-top: 15px;
   cursor: pointer;
 
@@ -99,8 +84,10 @@ const Button = styled.button`
   }
 `
 
-const H1 = styled.h1`
+const H2 = styled.h2`
+  font-size: 18px;
   font-weight: 300;
+  padding-bottom: 5px;
 `
 
 const ErrorMsg = styled.p`

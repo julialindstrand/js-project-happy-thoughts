@@ -7,12 +7,13 @@ export const CardList = ({ thoughts, onLike }) => {
   return (
     <ThoughtList>
       {thoughts.map((thought) => (
-        <CardsContainer>
+        <CardsContainer key={thought.id}>
           <ThoughtsCard
-            key={thought.id}
             thought={thought}
-            onLike={onLike}>
-          </ThoughtsCard></CardsContainer>
+            onLike={onLike}
+            createdAt={thought.createdAt}>
+          </ThoughtsCard>
+        </CardsContainer>
       ))}
     </ThoughtList>
   )
@@ -20,12 +21,11 @@ export const CardList = ({ thoughts, onLike }) => {
 
 // Styling
 const CardsContainer = styled.div`
-  border: 1px solid black;
-  box-shadow: 10px 10px 0 black;
-  margin: 20px;
-  width: 100%;
-  padding: 10px;
-  font-size: 10px;
+border: 1px solid black;
+box-shadow: 10px 10px 0 black;
+font-size: 10px;
+margin: 20px 0;
+padding: 10px;
   `
 
 const ThoughtList = styled.div`
