@@ -5,11 +5,11 @@ import { Time } from "./Time"
 export const ThoughtsCard = ({ thought, onLike, onEdit, onDelete, createdAt, isOwner }) => {
 
   const [isEditing, setIsEditing] = useState(false)
-  const [draft, setDraft] = useState(thought.text)
+  const [draft, setDraft] = useState(thought.message)
 
   useEffect(() => {
-    setDraft(thought.text)
-  }, [thought.text])
+    setDraft(thought.message)
+  }, [thought.message])
 
   const handleSave = async () => {
     await onEdit(thought.id, draft)
@@ -17,7 +17,7 @@ export const ThoughtsCard = ({ thought, onLike, onEdit, onDelete, createdAt, isO
   }
 
   const handleCancel = () => {
-    setDraft(thought.text)
+    setDraft(thought.message)
     setIsEditing(false)
   }
 
@@ -44,7 +44,7 @@ export const ThoughtsCard = ({ thought, onLike, onEdit, onDelete, createdAt, isO
           </>
         ) : (
           <>
-            <StyledText>{thought.text}</StyledText>
+            <StyledText>{thought.message}</StyledText>
             <div>
               {isOwner && (
                 <>
@@ -63,7 +63,7 @@ export const ThoughtsCard = ({ thought, onLike, onEdit, onDelete, createdAt, isO
       <LikeBtn onClick={() => onLike(thought.id)} aria-label="like this thought">
         ❤️
       </LikeBtn>
-      <LikeCount>{thought.likes}</LikeCount>
+      <LikeCount>{thought.hearts}</LikeCount>
       <Time createdAt={createdAt} />
     </Card>
   )

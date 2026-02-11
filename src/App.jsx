@@ -6,7 +6,8 @@ import { LoginForm } from "./components/LoginForm"
 import { SignUpForm } from "./components/SignUpForm"
 import { GlobalStyle } from "./components/GlobalStyles"
 
-const API_URL = "https://js-project-api-p074.onrender.com"
+export const API_URL = "http://localhost:8080"
+// export const API_URL = "https://js-project-api-p074.onrender.com"
 
 
 export const App = () => {
@@ -20,16 +21,32 @@ export const App = () => {
 
   const [authMode, setAuthMode] = useState("login")
 
-  const handleLogin = (userData) => {
-    localStorage.setItem("user", JSON.stringify(userData))
-    if (userData.token) localStorage.setItem("token", userData.token)
-    if (userData.id) localStorage.setItem("userId", userData.id)
-    setUser(userData)
-  }
-
   const handleSignUpSuccess = (newUser) => {
     localStorage.setItem("token", newUser.accessToken)
-    setUser(newUser)
+  }
+
+  const login = async (email, password) => {
+
+    const res = await fetch(`${API_URL}/users/login`, {
+      method: "POST",
+      body: JSON.stringify({
+        email: email,
+        password: password,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+
+    if (!res.ok) {
+      throw new Error("Network response was not ok")
+    }
+
+    const { response } = await res.json()
+    localStorage.setItem("user", JSON.stringify(response))
+    if (response.accessToken) localStorage.setItem("token", response.accessToken)
+    if (response.id) localStorage.setItem("userId", response.id)
+    setUser(response)
   }
 
   const handleLogout = () => {
@@ -54,10 +71,10 @@ export const App = () => {
 
         const formatted = thoughtsArray.map(item => ({
           id: item._id,
-          likes: item.hearts,
-          text: item.message,
+          hearts: item.hearts,
+          message: item.message,
           createdAt: item.createdAt,
-          authorId: item.authorId,
+          userId: item.userId,
         }))
         setThoughts(formatted)
       } catch (e) {
@@ -85,12 +102,14 @@ export const App = () => {
       const payload = await response.json()
 
       const item = payload?.data ?? payload
+      console.log(item)
 
       const newThought = {
         id: item._id,
-        likes: item.hearts,
-        text: item.message,
-        createdAt: item.createdAt
+        hearts: item.hearts,
+        message: item.message,
+        createdAt: item.createdAt,
+        userId: item.userId
       }
 
       setThoughts(prev => [newThought, ...prev])
@@ -101,12 +120,12 @@ export const App = () => {
   }
 
   // Edit
-  const editThought = async (id, newText) => {
+  const editThought = async (id, newMessage) => {
     try {
       const response = await fetch(`${API_URL}/thoughts/${id}`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: newText })
+        headers: authHeaders(),
+        body: JSON.stringify({ message: newMessage })
       })
 
       if (!response.ok) {
@@ -115,11 +134,11 @@ export const App = () => {
       }
 
       const payload = await response.json()
-      const item = payload?.data ?? payload
+      const item = payload?.thought ?? payload
 
       // Update local state – replace the edited thought
       setThoughts(prev =>
-        prev.map(t => (t.id === id ? { ...t, text: item.message } : t))
+        prev.map(t => (t.id === id ? { ...t, message: item.message } : t))
       )
     } catch (err) {
       console.error("Error while editing a thought:", err)
@@ -132,9 +151,9 @@ export const App = () => {
     if (!window.confirm("Delete this thought permanently?")) return
 
     try {
-      const response = await fetch(`${API_URL}thoughts/${id}`, {
+      const response = await fetch(`${API_URL}/thoughts/${id}`, {
         method: "DELETE",
-        headers: { "Content-Type": "application/json" }
+        headers: authHeaders(),
       })
 
       if (!response.ok) {
@@ -152,11 +171,11 @@ export const App = () => {
   // Likes
   const addLike = async (id) => {
 
-    const response = await fetch(`${API_URL}thoughts/${id}/like`,
+    const response = await fetch(`${API_URL}/thoughts/${id}/like`,
       {
         method: "POST",
-        body: JSON.stringify({ hearts: + 1 }),
-        headers: { "Content-Type": "application/json" },
+        headers: authHeaders(),
+        body: JSON.stringify({ hearts: + 1 })
       })
 
     const item = await response.json()
@@ -164,7 +183,7 @@ export const App = () => {
     setThoughts(prev => {
       return prev.map(thought =>
         thought.id === id
-          ? { ...thought, likes: item.hearts }
+          ? { ...thought, hearts: item.hearts }
           : thought
       )
     })
@@ -189,9 +208,9 @@ export const App = () => {
           ) : (
             <div>
               {authMode === "login" ? (
-                <LoginForm handleLogin={handleLogin} />
+                <LoginForm login={login} />
               ) : (
-                <SignUpForm onSuccess={handleSignUpSuccess} />
+                <SignUpForm onSuccess={handleSignUpSuccess} login={login} />
               )}
               <StyledDiv>
                 <StyledBtn
@@ -208,6 +227,7 @@ export const App = () => {
         <h1>HAPPY THOUGHTS</h1>
         <ThoughtsForm onSubmit={addThought} />
         <CardList
+          currentUserId={localStorage.getItem("userId")}
           thoughts={thoughts}
           onLike={addLike}
           onEdit={editThought}

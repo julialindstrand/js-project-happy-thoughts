@@ -1,10 +1,8 @@
 import { useState } from "react"
 import styled from "styled-components"
+import { API_URL } from "../App"
 
-const API_URL = "https://js-project-api-p074.onrender.com/thoughts"
-
-
-export const SignUpForm = ({ onSuccess }) => {
+export const SignUpForm = ({ onSuccess, login }) => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -46,6 +44,7 @@ export const SignUpForm = ({ onSuccess }) => {
       const newUser = await response.json()
       if (typeof onSuccess === "function") {
         onSuccess(newUser)
+        await login(formData.email, formData.password)
       }
 
     } catch (error) {
@@ -85,13 +84,14 @@ export const SignUpForm = ({ onSuccess }) => {
 
       <StyledBtn type="submit" disabled={isSubmitting}>
         {isSubmitting ? "Creating…" : "Sign up"}
-      </StyledBtn>    </FormWrapper>
+      </StyledBtn>
+    </FormWrapper>
   )
 }
 
 export default SignUpForm
 
-const FormWrapper = styled.div`
+const FormWrapper = styled.form`
 background: #f2f0f0;
 border: 1px solid black;
 box-shadow: 10px 10px 0 black;

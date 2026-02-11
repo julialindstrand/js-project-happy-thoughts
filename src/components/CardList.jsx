@@ -15,7 +15,7 @@ export const CardList = ({ thoughts, onLike, onEdit, onDelete, currentUserId }) 
             onEdit={onEdit}
             onDelete={onDelete}
             createdAt={thought.createdAt}
-            isOwner={thought.authorId === currentUserId}>
+            isOwner={thought.userId === currentUserId}>
           </ThoughtsCard>
         </CardsContainer>
       ))}

@@ -1,9 +1,7 @@
 import { useState } from "react"
 import styled from "styled-components"
 
-const API_URL = "https://js-project-api-p074.onrender.com/thoughts"
-
-export const LoginForm = ({ handleLogin }) => {
+export const LoginForm = ({ login }) => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -18,34 +16,14 @@ export const LoginForm = ({ handleLogin }) => {
       setError("Please fill in both fields")
       return
     }
-
-    setError("")
-
     try {
-      const response = await fetch(`${API_URL}/users/login`, {
-        method: "POST",
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-
-      if (!response.ok) {
-        throw new Error("Network response was not ok")
-      }
-
-      const data = await response.json()
-      handleLogin(data.response)
+      await login(formData.email, formData.password)
       setFormData({ email: "", password: "" })
-
-    } catch (error) {
+    } catch {
       setError("Invalid email or password")
-      console.log(error)
     }
   }
+
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -87,7 +65,7 @@ export const LoginForm = ({ handleLogin }) => {
 
 export default LoginForm
 
-const FormWrapper = styled.div`
+const FormWrapper = styled.form`
 background: #f2f0f0;
 border: 1px solid black;
 box-shadow: 10px 10px 0 black;

@@ -27,7 +27,7 @@ export const ThoughtsForm = ({ onSubmit }) => {
     onSubmit(trimmed)
     setText("")
     setError("")
-  };
+  }
 
   return (
     <FormWrapper>
