@@ -1,7 +1,7 @@
 import styled from "styled-components"
 import { ThoughtsCard } from "./ThoughtsCard"
 
-export const CardList = ({ thoughts, onLike }) => {
+export const CardList = ({ thoughts, onLike, onEdit, onDelete, currentUserId }) => {
   if (!thoughts?.length) return null
 
   return (
@@ -9,9 +9,13 @@ export const CardList = ({ thoughts, onLike }) => {
       {thoughts.map((thought) => (
         <CardsContainer key={thought.id}>
           <ThoughtsCard
+            key={thought.id}
             thought={thought}
             onLike={onLike}
-            createdAt={thought.createdAt}>
+            onEdit={onEdit}
+            onDelete={onDelete}
+            createdAt={thought.createdAt}
+            isOwner={thought.authorId === currentUserId}>
           </ThoughtsCard>
         </CardsContainer>
       ))}
