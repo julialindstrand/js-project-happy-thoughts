@@ -6,9 +6,7 @@ import { LoginForm } from "./components/LoginForm"
 import { SignUpForm } from "./components/SignUpForm"
 import { GlobalStyle } from "./components/GlobalStyles"
 
-export const API_URL = "http://localhost:8080"
-// export const API_URL = "https://js-project-api-p074.onrender.com"
-
+export const API_URL = "https://js-project-api-p074.onrender.com"
 
 export const App = () => {
   const [thoughts, setThoughts] = useState([])
